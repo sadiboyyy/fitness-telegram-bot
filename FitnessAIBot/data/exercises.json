@@ -1,0 +1,930 @@
+[
+  {
+    "id": "bench_press",
+    "name": "Жим лёжа",
+    "category": "Грудь",
+    "equipment": "Штанга",
+    "difficulty": "Средний",
+    "sets": 4,
+    "reps": "6-8",
+    "rest": "2-3 минуты",
+    "primaryMuscles": ["Грудь"],
+    "secondaryMuscles": ["Трицепс", "Передняя дельта"],
+    "instructions": [
+      "Свести лопатки.",
+      "Поставить ноги устойчиво.",
+      "Опустить штангу к нижней части груди.",
+      "Выжать вверх без рывка."
+    ],
+    "commonMistakes": [
+      "Локти слишком широко.",
+      "Кисти согнуты назад.",
+      "Нет сведения лопаток."
+    ],
+    "photo": "photos/bench_press.jpg",
+    "video": "videos/bench_press.mp4"
+  },
+  {
+    "id": "incline_press",
+    "name": "Жим гантелей на наклонной скамье",
+    "category": "Верх груди",
+    "equipment": "Гантели",
+    "difficulty": "Средний",
+    "sets": 3,
+    "reps": "8-10",
+    "rest": "90 секунд",
+    "primaryMuscles": ["Верх груди"],
+    "secondaryMuscles": ["Передняя дельта", "Трицепс"],
+    "instructions": [
+      "Опустить гантели до уровня груди.",
+      "Поднимать по дуге вверх."
+    ],
+    "commonMistakes": [
+      "Слишком большой угол скамьи.",
+      "Неполная амплитуда."
+    ],
+    "photo": "photos/incline_press.jpg",
+    "video": "videos/incline_press.mp4"
+  },
+  {
+    "id": "squat",
+    "name": "Приседания со штангой",
+    "category": "Ноги",
+    "equipment": "Штанга",
+    "difficulty": "Средний",
+    "sets": 4,
+    "reps": "6-8",
+    "rest": "3 минуты",
+    "primaryMuscles": ["Квадрицепс", "Ягодицы"],
+    "secondaryMuscles": ["Бицепс бедра", "Кор"],
+    "instructions": [
+      "Спина ровная.",
+      "Колени направлены по линии стоп.",
+      "Опускаться минимум до параллели."
+    ],
+    "commonMistakes": [
+      "Округление спины.",
+      "Колени заваливаются внутрь."
+    ],
+    "photo": "photos/squat.jpg",
+    "video": "videos/squat.mp4"
+  },
+  {
+    "id": "deadlift",
+    "name": "Становая тяга",
+    "category": "Спина",
+    "equipment": "Штанга",
+    "difficulty": "Продвинутый",
+    "sets": 4,
+    "reps": "5",
+    "rest": "3 минуты",
+    "primaryMuscles": ["Спина", "Ягодицы"],
+    "secondaryMuscles": ["Бицепс бедра", "Трапеция"],
+    "instructions": [
+      "Держать спину ровной.",
+      "Штанга идёт вдоль ног."
+    ],
+    "commonMistakes": [
+      "Круглая поясница.",
+      "Рывок с пола."
+    ],
+    "photo": "photos/deadlift.jpg",
+    "video": "videos/deadlift.mp4"
+  },
+  {
+    "id": "lat_pulldown",
+    "name": "Тяга верхнего блока",
+    "category": "Спина",
+    "equipment": "Блок",
+    "difficulty": "Начинающий",
+    "sets": 3,
+    "reps": "10-12",
+    "rest": "90 секунд",
+    "primaryMuscles": ["Широчайшие"],
+    "secondaryMuscles": ["Бицепс"],
+    "instructions": [
+      "Тянуть рукоять к верхней части груди.",
+      "Не раскачиваться."
+    ],
+    "commonMistakes": [
+      "Тяга за голову.",
+      "Использование инерции."
+    ],
+    "photo": "photos/lat_pulldown.jpg",
+    "video": "videos/lat_pulldown.mp4"
+  },
+  {
+    "id": "barbell_row",
+    "name": "Тяга штанги в наклоне",
+    "category": "Спина",
+    "equipment": "Штанга",
+    "difficulty": "Средний",
+    "sets": 4,
+    "reps": "8-10",
+    "rest": "2 минуты",
+    "primaryMuscles": ["Широчайшие"],
+    "secondaryMuscles": ["Трапеция", "Бицепс"],
+    "instructions": [
+      "Держать корпус под углом около 45°.",
+      "Тянуть штангу к поясу."
+    ],
+    "commonMistakes": [
+      "Круглая спина.",
+      "Слишком сильное раскачивание."
+    ],
+    "photo": "photos/barbell_row.jpg",
+    "video": "videos/barbell_row.mp4"
+  },
+  {
+    "id": "shoulder_press",
+    "name": "Жим штанги стоя",
+    "category": "Плечи",
+    "equipment": "Штанга",
+    "difficulty": "Средний",
+    "sets": 4,
+    "reps": "6-8",
+    "rest": "2 минуты",
+    "primaryMuscles": ["Передняя дельта"],
+    "secondaryMuscles": ["Трицепс"],
+    "instructions": [
+      "Жать вертикально вверх.",
+      "Не прогибаться в пояснице."
+    ],
+    "commonMistakes": [
+      "Сильный прогиб.",
+      "Неполная амплитуда."
+    ],
+    "photo": "photos/shoulder_press.jpg",
+    "video": "videos/shoulder_press.mp4"
+  },
+  { "id": "barbell_curl",
+    "name": "Подъём штанги на бицепс",
+    "category": "Бицепс",
+    "equipment": "Штанга",
+    "difficulty": "Начинающий",
+    "sets": 3,
+    "reps": "10-12",
+    "rest": "60 секунд",
+    "primaryMuscles": ["Бицепс"],
+    "secondaryMuscles": ["Предплечья"],
+    "instructions": [
+      "Локти прижаты к корпусу.",
+      "Не помогать корпусом."
+    ],
+    "commonMistakes": [
+      "Читинг.",
+      "Подъём локтей."
+    ],
+    "photo": "photos/barbell_curl.jpg",
+    "video": "videos/barbell_curl.mp4"
+  },
+  {
+    "id": "triceps_pushdown",
+    "name": "Разгибание рук на верхнем блоке",
+    "category": "Трицепс",
+    "equipment": "Блок",
+    "difficulty": "Начинающий",
+    "sets": 3,
+    "reps": "10-12",
+    "rest": "60 секунд",
+    "primaryMuscles": ["Трицепс"],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Локти неподвижны.",
+      "Полностью разгибать руки."
+    ],
+    "commonMistakes": [
+      "Движение плечами.",
+      "Неполная амплитуда."
+    ],
+    "photo": "photos/triceps_pushdown.jpg",
+    "video": "videos/triceps_pushdown.mp4"
+  },
+  {
+    "id": "plank",
+    "name": "Планка",
+    "category": "Пресс",
+    "equipment": "Без оборудования",
+    "difficulty": "Начинающий",
+    "sets": 3,
+    "reps": "30-60 секунд",
+    "rest": "60 секунд",
+    "primaryMuscles": ["Пресс"],
+    "secondaryMuscles": ["Кор", "Поясница"],
+    "instructions": [
+      "Держать тело прямой линией.",
+      "Не провисать в пояснице."
+    ],
+    "commonMistakes": [
+      "Поднятый таз.",
+      "Провисание поясницы."
+    ],
+    "photo": "photos/plank.jpg",
+    "video": "videos/plank.mp4"
+  },
+  {
+    "id": "pec_deck",
+    "name": "Сведение рук в тренажёре",
+    "category": "Грудь",
+    "equipment": "Тренажёр",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Грудь"],
+  "secondaryMuscles": ["Передняя дельта"],
+  "photo": "photos/pec_deck.jpg",
+  "video": "videos/pec_deck.mp4"
+},
+{
+  "id": "push_up",
+  "name": "Отжимания",
+  "category": "Грудь",
+  "equipment": "Без оборудования",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "15-20",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Грудь"],
+  "secondaryMuscles": ["Трицепс","Передняя дельта"],
+  "photo": "photos/push_up.jpg",
+  "video": "videos/push_up.mp4"
+},
+{
+  "id": "dips",
+  "name": "Отжимания на брусьях",
+  "category": "Грудь",
+  "equipment": "Брусья",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "8-12",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Грудь","Трицепс"],
+  "secondaryMuscles": ["Передняя дельта"],
+  "photo": "photos/dips.jpg",
+  "video": "videos/dips.mp4"
+},
+{
+  "id": "pull_up",
+  "name": "Подтягивания",
+  "category": "Спина",
+  "equipment": "Турник",
+  "difficulty": "Средний",
+  "sets": 4,
+  "reps": "6-10",
+  "rest": "2 минуты",
+  "primaryMuscles": ["Широчайшие"],
+  "secondaryMuscles": ["Бицепс"],
+  "photo": "photos/pull_up.jpg",
+  "video": "videos/pull_up.mp4"
+},
+{
+  "id": "seated_row",
+  "name": "Горизонтальная тяга блока",
+  "category": "Спина",
+  "equipment": "Блок",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "10-12",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Широчайшие"],
+  "secondaryMuscles": ["Бицепс","Трапеция"],
+  "photo": "photos/seated_row.jpg",
+  "video": "videos/seated_row.mp4"
+},
+{
+  "id": "face_pull",
+  "name": "Face Pull",
+  "category": "Плечи",
+  "equipment": "Блок",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Задняя дельта"],
+  "secondaryMuscles": ["Трапеция"],
+  "photo": "photos/face_pull.jpg",
+  "video": "videos/face_pull.mp4"
+},
+{
+  "id": "lateral_raise",
+  "name": "Махи гантелями в стороны",
+  "category": "Плечи",
+  "equipment": "Гантели",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Средняя дельта"],
+  "secondaryMuscles": [],
+  "photo": "photos/lateral_raise.jpg",
+  "video": "videos/lateral_raise.mp4"
+},
+{
+  "id": "rear_delt_fly",
+  "name": "Разведение на заднюю дельту",
+  "category": "Плечи",
+  "equipment": "Гантели",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Задняя дельта"],
+  "secondaryMuscles": ["Трапеция"],
+  "photo": "photos/rear_delt_fly.jpg",
+  "video": "videos/rear_delt_fly.mp4"
+},
+{
+  "id": "hammer_curl",
+  "name": "Молотковые сгибания",
+  "category": "Бицепс",
+  "equipment": "Гантели",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "10-12",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Бицепс"],
+  "secondaryMuscles": ["Предплечья"],
+  "photo": "photos/hammer_curl.jpg",
+  "video": "videos/hammer_curl.mp4"
+},
+{
+  "id": "preacher_curl",
+  "name": "Сгибание на скамье Скотта",
+  "category": "Бицепс",
+  "equipment": "EZ-штанга",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "8-10",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Бицепс"],
+  "secondaryMuscles": [],
+  "photo": "photos/preacher_curl.jpg",
+  "video": "videos/preacher_curl.mp4"
+},
+{
+  "id": "skull_crusher",
+  "name": "Французский жим лёжа",
+  "category": "Трицепс",
+  "equipment": "EZ-штанга",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "8-10",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Трицепс"],
+  "secondaryMuscles": [],
+  "photo": "photos/skull_crusher.jpg",
+  "video": "videos/skull_crusher.mp4"
+},
+{
+  "id": "close_grip_bench",
+  "name": "Жим лёжа узким хватом",
+  "category": "Трицепс",
+  "equipment": "Штанга",
+  "difficulty": "Средний",
+  "sets": 4,
+  "reps": "6-8",
+  "rest": "2 минуты",
+  "primaryMuscles": ["Трицепс"],
+  "secondaryMuscles": ["Грудь"],
+  "photo": "photos/close_grip_bench.jpg",
+  "video": "videos/close_grip_bench.mp4"
+},
+{
+  "id": "leg_press",
+  "name": "Жим ногами",
+  "category": "Ноги",
+  "equipment": "Тренажёр",
+  "difficulty": "Начинающий",
+  "sets": 4,
+  "reps": "10-12",
+  "rest": "2 минуты",
+  "primaryMuscles": ["Квадрицепс"],
+  "secondaryMuscles": ["Ягодицы"],
+  "photo": "photos/leg_press.jpg",
+  "video": "videos/leg_press.mp4"
+},
+{
+  "id": "leg_extension",
+  "name": "Разгибание ног",
+  "category": "Ноги",
+  "equipment": "Тренажёр",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Квадрицепс"],
+  "secondaryMuscles": [],
+  "photo": "photos/leg_extension.jpg",
+  "video": "videos/leg_extension.mp4"
+},
+{
+  "id": "leg_curl",
+  "name": "Сгибание ног лёжа",
+  "category": "Ноги",
+  "equipment": "Тренажёр",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Бицепс бедра"],
+  "secondaryMuscles": [],
+  "photo": "photos/leg_curl.jpg",
+  "video": "videos/leg_curl.mp4"
+},
+{
+  "id": "bulgarian_split_squat",
+  "name": "Болгарские выпады",
+  "category": "Ноги",
+  "equipment": "Гантели",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "10",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Квадрицепс","Ягодицы"],
+  "secondaryMuscles": ["Бицепс бедра"],
+  "photo": "photos/bulgarian_split_squat.jpg",
+  "video": "videos/bulgarian_split_squat.mp4"
+},
+{
+  "id": "standing_calf_raise",
+  "name": "Подъём на носки стоя",
+  "category": "Икры",
+  "equipment": "Тренажёр",
+  "difficulty": "Начинающий",
+  "sets": 4,
+  "reps": "15-20",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Икры"],
+  "secondaryMuscles": [],
+  "photo": "photos/standing_calf_raise.jpg",
+  "video": "videos/standing_calf_raise.mp4"
+},
+{
+  "id": "hanging_leg_raise",
+  "name": "Подъём ног в висе",
+  "category": "Пресс",
+  "equipment": "Турник",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Пресс"],
+  "secondaryMuscles": ["Сгибатели бедра"],
+  "photo": "photos/hanging_leg_raise.jpg",
+  "video": "videos/hanging_leg_raise.mp4"
+},
+{
+  "id": "cable_crunch",
+  "name": "Скручивания на блоке",
+  "category": "Пресс",
+  "equipment": "Блок",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Пресс"],
+  "secondaryMuscles": [],
+  "photo": "photos/cable_crunch.jpg",
+  "video": "videos/cable_crunch.mp4"
+},
+{
+  "id": "russian_twist",
+  "name": "Русские скручивания",
+  "category": "Пресс",
+  "equipment": "Диск",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "20",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Косые мышцы живота"],
+  "secondaryMuscles": ["Пресс"],
+  "photo": "photos/russian_twist.jpg",
+  "video": "videos/russian_twist.mp4"
+}
+,
+{
+  "id": "smith_bench_press",
+  "name": "Жим лёжа в машине Смита",
+  "category": "Грудь",
+  "equipment": "Машина Смита",
+  "difficulty": "Начинающий",
+  "sets": 4,
+  "reps": "8-10",
+  "rest": "2 минуты",
+  "primaryMuscles": ["Грудь"],
+  "secondaryMuscles": ["Трицепс", "Передняя дельта"],
+  "instructions": [
+    "Свести лопатки.",
+    "Опустить штангу к нижней части груди.",
+    "Выжать вверх без рывков."
+  ],
+  "commonMistakes": [
+    "Локти слишком широко.",
+    "Отрыв таза от скамьи."
+  ],
+  "photo": "photos/smith_bench_press.jpg",
+  "video": "videos/smith_bench_press.mp4"
+},
+{
+  "id": "dumbbell_pullover",
+  "name": "Пуловер с гантелью",
+  "category": "Грудь",
+  "equipment": "Гантель",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "10-12",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Грудь"],
+  "secondaryMuscles": ["Широчайшие"],
+  "instructions": [
+    "Опускать гантель медленно за голову.",
+    "Вернуть в исходное положение."
+  ],
+  "commonMistakes": [
+    "Слишком большой вес.",
+    "Сгибание рук."
+  ],
+  "photo": "photos/dumbbell_pullover.jpg",
+  "video": "videos/dumbbell_pullover.mp4"
+},
+{
+  "id": "meadows_row",
+  "name": "Тяга Медоуза",
+  "category": "Спина",
+  "equipment": "Штанга",
+  "difficulty": "Продвинутый",
+  "sets": 3,
+  "reps": "8-10",
+  "rest": "2 минуты",
+  "primaryMuscles": ["Широчайшие"],
+  "secondaryMuscles": ["Трапеция", "Задняя дельта"],
+  "instructions": [
+    "Тянуть локтем назад.",
+    "Не округлять спину."
+  ],
+  "commonMistakes": [
+    "Рывки корпусом.",
+    "Круглая поясница."
+  ],
+  "photo": "photos/meadows_row.jpg",
+  "video": "videos/meadows_row.mp4"
+},
+{
+  "id": "good_morning",
+  "name": "Good Morning",
+  "category": "Спина",
+  "equipment": "Штанга",
+  "difficulty": "Продвинутый",
+  "sets": 3,
+  "reps": "8-10",
+  "rest": "2 минуты",
+  "primaryMuscles": ["Разгибатели спины"],
+  "secondaryMuscles": ["Ягодицы", "Бицепс бедра"],
+  "instructions": [
+    "Спина ровная.",
+    "Наклоняться тазом назад."
+  ],
+  "commonMistakes": [
+    "Округление спины."
+  ],
+  "photo": "photos/good_morning.jpg",
+  "video": "videos/good_morning.mp4"
+},
+{
+  "id": "cable_front_raise",
+  "name": "Подъём руки перед собой в кроссовере",
+  "category": "Плечи",
+  "equipment": "Кроссовер",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Передняя дельта"],
+  "secondaryMuscles": [],
+  "instructions": [
+    "Поднимать руку до уровня плеч."
+  ],
+  "commonMistakes": [
+    "Использование инерции."
+  ],
+  "photo": "photos/cable_front_raise.jpg",
+  "video": "videos/cable_front_raise.mp4"
+},
+{
+  "id": "zottman_curl",
+  "name": "Подъём Зоттмана",
+  "category": "Бицепс",
+  "equipment": "Гантели",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "10-12",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Бицепс"],
+  "secondaryMuscles": ["Предплечья"],
+  "instructions": [
+    "Поднимать обычным хватом.",
+    "Опускать обратным хватом."
+  ],
+  "commonMistakes": [
+    "Читинг."
+  ],
+  "photo": "photos/zottman_curl.jpg",
+  "video": "videos/zottman_curl.mp4"
+},
+{
+  "id": "bench_dips",
+  "name": "Обратные отжимания от скамьи",
+  "category": "Трицепс",
+  "equipment": "Скамья",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Трицепс"],
+  "secondaryMuscles": ["Передняя дельта"],
+  "instructions": [
+    "Опускаться до угла 90° в локтях."
+  ],
+  "commonMistakes": [
+    "Слишком глубокое опускание."
+  ],
+  "photo": "photos/bench_dips.jpg",
+  "video": "videos/bench_dips.mp4"
+},
+{
+  "id": "sumo_deadlift",
+  "name": "Становая тяга сумо",
+  "category": "Ноги",
+  "equipment": "Штанга",
+  "difficulty": "Средний",
+  "sets": 4,
+  "reps": "5-6",
+  "rest": "3 минуты",
+  "primaryMuscles": ["Ягодицы", "Квадрицепс"],
+  "secondaryMuscles": ["Приводящие мышцы", "Спина"],
+  "instructions": [
+    "Широкая постановка ног.",
+    "Спина прямая."
+  ],
+  "commonMistakes": [
+    "Округление поясницы."
+  ],
+  "photo": "photos/sumo_deadlift.jpg",
+  "video": "videos/sumo_deadlift.mp4"
+},
+{
+  "id": "donkey_calf_raise",
+  "name": "Подъём на носки в наклоне",
+  "category": "Икры",
+  "equipment": "Тренажёр",
+  "difficulty": "Средний",
+  "sets": 4,
+  "reps": "15-20",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Икры"],
+  "secondaryMuscles": [],
+  "instructions": [
+    "Полностью растягивать икры.",
+    "Подниматься максимально высоко."
+  ],
+  "commonMistakes": [
+    "Малая амплитуда."
+  ],
+  "photo": "photos/donkey_calf_raise.jpg",
+  "video": "videos/donkey_calf_raise.mp4"
+},
+{
+  "id": "bicycle_crunch",
+  "name": "Велосипед",
+  "category": "Пресс",
+  "equipment": "Без оборудования",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "20",
+  "rest": "45 секунд",
+  "primaryMuscles": ["Пресс"],
+  "secondaryMuscles": ["Косые мышцы живота"],
+  "instructions": [
+    "Тянуть локоть к противоположному колену.",
+    "Не тянуть шею руками."
+  ],
+  "commonMistakes": [
+    "Слишком быстрый темп."
+  ],
+  "photo": "photos/bicycle_crunch.jpg",
+  "video": "videos/bicycle_crunch.mp4"
+}
+,
+{
+  "id": "landmine_press",
+  "name": "Жим штанги в упоре (Landmine Press)",
+  "category": "Плечи",
+  "equipment": "Штанга",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "10-12",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Передняя дельта"],
+  "secondaryMuscles": ["Верх груди","Трицепс"],
+  "instructions": [
+    "Жми штангу по дуге вверх.",
+    "Держи корпус напряженным."
+  ],
+  "commonMistakes": [
+    "Прогиб в пояснице.",
+    "Неполная амплитуда."
+  ],
+  "photo": "photos/landmine_press.jpg",
+  "video": "videos/landmine_press.mp4"
+},
+{
+  "id": "machine_row",
+  "name": "Тяга в тренажёре сидя",
+  "category": "Спина",
+  "equipment": "Тренажёр",
+  "difficulty": "Начинающий",
+  "sets": 4,
+  "reps": "10-12",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Широчайшие"],
+  "secondaryMuscles": ["Ромбовидные","Бицепс"],
+  "instructions": [
+    "Своди лопатки.",
+    "Не отклоняй корпус назад."
+  ],
+  "commonMistakes": [
+    "Рывки корпусом.",
+    "Круглая спина."
+  ],
+  "photo": "photos/machine_row.jpg",
+  "video": "videos/machine_row.mp4"
+},
+{
+  "id": "reverse_pec_deck",
+  "name": "Обратная бабочка",
+  "category": "Плечи",
+  "equipment": "Тренажёр",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Задняя дельта"],
+  "secondaryMuscles": ["Трапеция"],
+  "instructions": [
+    "Разводи руки назад.",
+    "Не поднимай плечи."
+  ],
+  "commonMistakes": [
+    "Использование инерции."
+  ],
+  "photo": "photos/reverse_pec_deck.jpg",
+  "video": "videos/reverse_pec_deck.mp4"
+},
+{
+  "id": "goblet_squat",
+  "name": "Гоблет-присед",
+  "category": "Ноги",
+  "equipment": "Гантель",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Квадрицепс"],
+  "secondaryMuscles": ["Ягодицы","Кор"],
+  "instructions": [
+    "Держи гантель у груди.",
+    "Приседай до параллели."
+  ],
+  "commonMistakes": [
+    "Колени заваливаются внутрь."
+  ],
+  "photo": "photos/goblet_squat.jpg",
+  "video": "videos/goblet_squat.mp4"
+},
+{
+  "id": "step_up",
+  "name": "Зашагивания на платформу",
+  "category": "Ноги",
+  "equipment": "Гантели",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "10",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Квадрицепс","Ягодицы"],
+  "secondaryMuscles": ["Бицепс бедра"],
+  "instructions": [
+    "Поднимайся без рывка.",
+    "Полностью выпрямляй ногу."
+  ],
+  "commonMistakes": [
+    "Толчок второй ногой."
+  ],
+  "photo": "photos/step_up.jpg",
+  "video": "videos/step_up.mp4"
+},
+{
+  "id": "hip_abduction",
+  "name": "Разведение ног в тренажёре",
+  "category": "Ягодицы",
+  "equipment": "Тренажёр",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Средняя ягодичная"],
+  "secondaryMuscles": [],
+  "instructions": [
+    "Разводи ноги плавно.",
+    "Не бросай вес."
+  ],
+  "commonMistakes": [
+    "Резкие движения."
+  ],
+  "photo": "photos/hip_abduction.jpg",
+  "video": "videos/hip_abduction.mp4"
+},
+{
+  "id": "hip_adduction",
+  "name": "Сведение ног в тренажёре",
+  "category": "Приводящие мышцы",
+  "equipment": "Тренажёр",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Приводящие мышцы"],
+  "secondaryMuscles": [],
+  "instructions": [
+    "Своди ноги без рывков."
+  ],
+  "commonMistakes": [
+    "Слишком большой вес."
+  ],
+  "photo": "photos/hip_adduction.jpg",
+  "video": "videos/hip_adduction.mp4"
+},
+{
+  "id": "farmer_walk",
+  "name": "Фермерская прогулка",
+  "category": "Предплечья",
+  "equipment": "Гантели",
+  "difficulty": "Средний",
+  "sets": 3,
+  "reps": "30 метров",
+  "rest": "90 секунд",
+  "primaryMuscles": ["Предплечья"],
+  "secondaryMuscles": ["Трапеция","Кор"],
+  "instructions": [
+    "Держи корпус ровно.",
+    "Не раскачивайся."
+  ],
+  "commonMistakes": [
+    "Сутулая спина."
+  ],
+  "photo": "photos/farmer_walk.jpg",
+  "video": "videos/farmer_walk.mp4"
+},
+{
+  "id": "wrist_curl",
+  "name": "Сгибание кистей",
+  "category": "Предплечья",
+  "equipment": "Штанга",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "15-20",
+  "rest": "45 секунд",
+  "primaryMuscles": ["Предплечья"],
+  "secondaryMuscles": [],
+  "instructions": [
+    "Работай только кистями."
+  ],
+  "commonMistakes": [
+    "Движение локтями."
+  ],
+  "photo": "photos/wrist_curl.jpg",
+  "video": "videos/wrist_curl.mp4"
+},
+{
+  "id": "back_extension",
+  "name": "Гиперэкстензия",
+  "category": "Поясница",
+  "equipment": "Римский стул",
+  "difficulty": "Начинающий",
+  "sets": 3,
+  "reps": "12-15",
+  "rest": "60 секунд",
+  "primaryMuscles": ["Разгибатели спины"],
+  "secondaryMuscles": ["Ягодицы","Бицепс бедра"],
+  "instructions": [
+    "Поднимай корпус до прямой линии.",
+    "Не переразгибай спину."
+  ],
+  "commonMistakes": [
+    "Слишком высокое поднятие корпуса."
+  ],
+  "photo": "photos/back_extension.jpg",
+  "video": "videos/back_extension.mp4"
+}
+
+]
