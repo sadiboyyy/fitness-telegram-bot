@@ -9,7 +9,14 @@ import json
 import os 
 import base64
 from keyboards.exercise import exercise_keyboard 
-from keyboards.menu import  main_menu, cancel_menu, ai_menu
+from keyboards.menu import (
+    main_menu,
+    cancel_menu,
+    ai_menu,
+    user_main_menu,
+    user_settings_menu,
+)
+from keyboards.admin import admin_menu, admin_settings_menu
 from keyboards.workout import goal_keyboard, experience_keyboard, days_keyboard, place_keyboard
 from keyboards.facts import facts_menu 
 from nutritions import router as nutrition_router
@@ -25,8 +32,32 @@ from vision import analyze_frames
 from facts_ai import generate_fact
 from workouts import create_workout_program
 from aiogram import F
+from aiogram.filters import Command
+from aiogram.types import BotCommand, KeyboardButton, ReplyKeyboardMarkup
 from handlers.progress import router as progress_router
+from subscription import router as subscription_router
+from fitcoins import router as fitcoins_router 
+from daily_tasks import router as daily_tasks_router
+from payments import router as payments_router
+from achievements import (router as achievements_router)
+from handlers.meditation import router as meditation_router 
+from partner import router as partner_router 
+from handlers.stretching import stretching_router
+from admin.router import router as admin_router 
+from admin.users import router as admin_users_router
+from admin.dashboard import router as admin_dashboard_router
 
+
+from database import (
+    conn,
+    cursor,
+    create_users_table,
+    add_user,
+    get_users_count,
+    get_last_users,
+    get_subscription_status,
+    get_expiring_subscriptions,
+)
 
 
 # Временно храним настройки программ пользователей в памяти.
@@ -51,6 +82,13 @@ from keyboards.workout  import (
     place_keyboard
 
 )
+from admin.subscriptions import router as admin_subscriptions_router
+from admin.finance import router as admin_finance_router
+from admin.broadcasts import router as admin_broadcasts_router
+from admin.promocodes import router as admin_promocodes_router
+from admin.ai_limit import router as admin_ai_limits_router
+from admin.support import router as admin_support_router
+from admin.settings import router as admin_settings_router
 
 
 bot = Bot(token=BOT_TOKEN)
@@ -59,13 +97,35 @@ dp.include_router(nutrition_router)
 dp.include_router(voice_chat_router)
 dp.include_router(reminders_router)
 dp.include_router(progress_router)
+dp.include_router(subscription_router)
+dp.include_router(fitcoins_router)
+dp.include_router(daily_tasks_router)
+dp.include_router(payments_router)
+dp.include_router(achievements_router)
+dp.include_router(meditation_router)
+dp.include_router(partner_router)
+dp.include_router(stretching_router) 
+
+
+dp.include_router(admin_router)
+dp.include_router(admin_dashboard_router)
+dp.include_router(admin_users_router)
+dp.include_router(admin_subscriptions_router)
+dp.include_router(admin_finance_router)
+dp.include_router(admin_broadcasts_router)
+dp.include_router(admin_promocodes_router)
+dp.include_router(admin_ai_limits_router)
+
+dp.include_router(admin_support_router)
+dp.include_router(admin_settings_router)
+
 # dp.include_router(fallback_router)
 
 
 # Временное хранение прогресса.
 # После перезапуска бота данные удалятся.
 users_progress: dict[int, list[float]] = {}
-
+ADMIN_ID = 1679392581
 
 class WorkoutForm(StatesGroup):
     height = State()
@@ -101,10 +161,69 @@ class ExerciseVideoForm(StatesGroup):
 async def start(message: Message, state: FSMContext):
     await state.clear()
 
+    if message.from_user is None:
+        return
+
+    add_user(
+        telegram_id=message.from_user.id,
+        username=message.from_user.username,
+        first_name=message.from_user.first_name,
+    )
+
+    text = (message.text or "").strip()
+    payload = ""
+    if text.startswith("/start"):
+        parts = text.split(maxsplit=1)
+        if len(parts) > 1:
+            payload = parts[1].strip()
+
+    if payload.startswith("partner_"):
+        partner_code = payload.replace("partner_", "", 1)
+        cursor.execute(
+            "SELECT user_id FROM users WHERE partner_code = ?",
+            (partner_code,),
+        )
+        partner = cursor.fetchone()
+        if partner and partner[0] != message.from_user.id:
+            cursor.execute(
+                "UPDATE users SET referred_by = ? WHERE user_id = ? AND referred_by IS NULL",
+                (partner[0], message.from_user.id),
+            )
+            conn.commit()
+
+    if message.from_user.id == ADMIN_ID:
+        await message.answer(
+            "👑 Админ-панель активна\n\n"
+            "Выберите раздел ниже:",
+            reply_markup=admin_menu,
+        )
+        return
+
+    status = get_subscription_status(message.from_user.id)
+
+    if status["active"]:
+        if status["days_left"] <= 3:
+            await message.answer(
+                "⏳ <b>Подписка скоро закончится</b>\n\n"
+                f"План: <b>{status['plan']}</b>\n"
+                f"Осталось дней: <b>{status['days_left']}</b>\n\n"
+                "Обновите подписку, чтобы продолжить пользоваться ботом.",
+                parse_mode="HTML",
+            )
+        await message.answer(
+            "Добро пожаловать! 👋\n\n"
+            "Выберите раздел ниже:",
+            reply_markup=user_main_menu,
+        )
+        return
+
     await message.answer(
-        "💪 Добро пожаловать в Fitness AI!\n\n"
-        "Здесь ты можешь получить программу тренировок, "
-        "рассчитать калории и отслеживать прогресс.",
+        "❌ <b>Доступ к боту закрыт</b>\n\n"
+        "Подписка не активна или просрочена.\n\n"
+        "💵 Пользователь: <b>$10/месяц</b>\n"
+        "🏢 Бизнес: <b>$50/месяц</b>\n\n"
+        "Выберите подходящий тариф в разделе подписки.",
+        parse_mode="HTML",
         reply_markup=main_menu,
     )
 
@@ -116,6 +235,131 @@ async def cancel(message: Message, state: FSMContext):
     await message.answer(
         "Действие отменено.",
         reply_markup=main_menu,
+    )
+
+
+@dp.message(F.text == "💼 Бизнес")
+async def business_section(message: Message):
+    back_keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="◀️ Назад")],
+        ],
+        resize_keyboard=True,
+    )
+    await message.answer(
+        "💼 Бизнес-раздел\n\n"
+        "Здесь можно управлять услугами, клиентами, подписками и финансами.",
+        reply_markup=back_keyboard,
+    )
+
+
+@dp.message(F.text == "📦 Услуги")
+async def services_section(message: Message):
+    back_keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="◀️ Назад")],
+        ],
+        resize_keyboard=True,
+    )
+    await message.answer(
+        "📦 Услуги\n\n"
+        "Тарифы, пакеты, записи, абонементы и доступ к программам.",
+        reply_markup=back_keyboard,
+    )
+
+
+@dp.message(F.text == "📊 Статистика")
+async def statistics_section(message: Message):
+    await message.answer(
+        "📊 Статистика\n\n"
+        "Показатели активности, прогресс, обучение и результаты пользователей.",
+        reply_markup=user_main_menu,
+    )
+
+
+@dp.message(F.text == "⚙️ Настройки")
+async def settings_section(message: Message):
+    await message.answer(
+        "⚙️ Настройки",
+        reply_markup=user_settings_menu,
+    )
+
+
+@dp.message(F.text == "🆘 Поддержка")
+async def support_section(message: Message):
+    back_keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="◀️ Назад")],
+        ],
+        resize_keyboard=True,
+    )
+    await message.answer(
+        "🆘 Поддержка\n\n"
+        "Напишите нам, и мы поможем разобраться с вопросом.\n\n"
+        "Telegram: @YurchikBond\n"
+        "ID: 1679392581",
+        reply_markup=back_keyboard,
+    )
+
+
+@dp.message(F.text == "📞 Контакты")
+async def contacts_section(message: Message):
+    back_keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="◀️ Назад")],
+        ],
+        resize_keyboard=True,
+    )
+    await message.answer(
+        "📞 Контакты\n\n"
+        "Telegram: @YurchikBond\n"
+        "ID: 1679392581",
+        reply_markup=back_keyboard,
+    )
+
+
+@dp.message(F.text == "🧾 Профиль")
+async def profile_section(message: Message):
+    await message.answer(
+        "🧾 Профиль\n\n"
+        f"Имя: {message.from_user.first_name if message.from_user else 'Пользователь'}\n"
+        f"ID: {message.from_user.id if message.from_user else '—'}",
+        reply_markup=user_settings_menu,
+    )
+
+
+@dp.message(F.text == "🔔 Уведомления")
+async def notifications_section(message: Message):
+    await message.answer(
+        "🔔 Уведомления\n\n"
+        "Уведомления включены. Вы будете получать обновления и напоминания.",
+        reply_markup=user_settings_menu,
+    )
+
+
+@dp.message(F.text == "💬 Изменить имя")
+async def change_name_section(message: Message):
+    await message.answer(
+        "💬 Изменить имя\n\n"
+        "Напишите новое имя, которое хотите использовать в боте.",
+        reply_markup=user_settings_menu,
+    )
+
+
+@dp.message(F.text == "🌐 Язык")
+async def language_section(message: Message):
+    await message.answer(
+        "🌐 Язык\n\n"
+        "Выбранный язык: русский",
+        reply_markup=user_settings_menu,
+    )
+
+
+@dp.message(F.text == "◀️ Назад")
+async def back_to_main_from_settings(message: Message):
+    await message.answer(
+        "◀️ Назад в главное меню",
+        reply_markup=user_main_menu,
     )
 
 
@@ -768,11 +1012,17 @@ async def body_analysis_photo(message: Message, state: FSMContext):
     
      
 
-@dp.message(F.text == "🎥 Проверить технику")
-async def start_video_analysis(message: Message, state: FSMContext):
+@dp.message(F.text == "🎥 Проверить технику упражнений")
+async def start_video_analysis(
+    message: Message,
+    state: FSMContext,
+):
+    print("🔥 НАЖАТА КНОПКА ПРОВЕРИТЬ ТЕХНИКУ")
 
     await state.clear()
-    await state.set_state(WorkoutForm.exercise_video)
+    await state.set_state(
+        WorkoutForm.exercise_video
+    )
 
     await message.answer(
         "🎥 Отправь видео упражнения.\n\n"
@@ -858,13 +1108,11 @@ async def facts_start(message: Message):
         reply_markup=facts_menu
     )
 
-@dp.message(F.text == "◀️ Главное меню")
-async def back_to_main(message: Message, state: FSMContext):
-    await state.clear()
-
+@dp.message(F.text == "🏠 Главное меню")
+async def back_to_main(message: Message):
     await message.answer(
-        "Главное меню:",
-        reply_markup=main_menu,
+        "🏠 Вы вернулись в главное меню для обычного пользователя.",
+        reply_markup=user_main_menu,
     )
     
 
@@ -1052,11 +1300,39 @@ async def random_fact(message: Message):
 
 {exercise["difficulty"]}
 """
+@dp.message(Command("help"))
+async def help_command(message: Message):
+    await message.answer(
+        "❓ <b>Помощь Fitness AI</b>\n\n"
+        "💪 Программа тренировок — создаёт персональный план\n"
+        "🍽 Программа питания — составляет рацион\n"
+        "📈 Мой прогресс — отслеживание результатов\n"
+        "🎙 Голосовой фитнес-чат — вопросы голосом\n"
+        "🤖 Спросить ИИ — вопросы о тренировках и питании\n\n"
+        "🏠 Чтобы вернуться в главное меню, используйте /start",
+        parse_mode="HTML",
+        reply_markup=main_menu,
+    )
 
 
+async def set_bot_commands(bot):
+    commands = [
+        BotCommand(
+            command="start",
+            description="🏠 Главное меню"
+        ),
+        BotCommand(
+            command="help",
+            description="❓ Помощь"
+        ),
+    ]
+
+    await bot.set_my_commands(commands)
 
 async def main():
     print("Бот запущен")
+    create_users_table()
+    await set_bot_commands(bot)
 
     if not scheduler.running:
         scheduler.start()

@@ -238,9 +238,10 @@ async def nutrition_favorite_foods(message: Message, state: FSMContext):
             else:
                 await message.answer(part)
 
+        await state.clear()
     except Exception as e:
         print(e)
-
+        await state.clear()
         await message.answer(
           f"❌ Ошибка:\n{e}"
         )
@@ -272,14 +273,15 @@ async def download_pdf(message: Message):
 
 
 @router.message(F.text == "🏠 Главное меню")
-async def back_to_menu(message: Message, state: FSMContext):
+async def back_to_menu(
+    message: Message,
+    state: FSMContext,
+):
     await state.clear()
 
     await message.answer(
         "🏠 Вы вернулись в главное меню.",
-        reply_markup=main_menu
+        reply_markup=main_menu,
     )
-    await state.clear()
-
 
 

@@ -9,10 +9,15 @@ from aiogram.types import KeyboardButton, Message, ReplyKeyboardMarkup
 
 from keyboards.menu import main_menu
 from datetime import datetime
-from database import conn, cursor
+from pathlib import Path
+from fitcoins import add_fitcoins
+from achievements import unlock_achievement
 
 
 router = Router()
+
+PHOTO_DIR = Path("photos/progress")
+PHOTO_DIR.mkdir(parents=True, exist_ok=True)
 
 def get_random_gif():
 
@@ -34,6 +39,17 @@ def get_random_gif():
     print(os.path.getsize(path))
     return FSInputFile(path)
 
+progress_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="📏 Добавить замеры")],
+        [KeyboardButton(text="📊 Посмотреть прогресс")],
+        [KeyboardButton(text=" 📸 Мои фото прогресса")],
+        [KeyboardButton(text="⚖️ Сравнить ДО и ПОСЛЕ")],
+        [KeyboardButton(text="🏠 Главное меню")],
+
+    ],
+    resize_keyboard=True,
+)
 
 
 class ProgressForm(StatesGroup):
@@ -41,21 +57,9 @@ class ProgressForm(StatesGroup):
     chest = State()
     waist = State()
     weight = State()
+    before_photo = State()
 
-    progress_menu = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="📏 Добавить замеры"),
-        ],
-        [
-            KeyboardButton(text="📊 Посмотреть прогресс"),
-        ],
-        [
-            KeyboardButton(text="🏠 Главное меню"),
-        ],
-    ],
-    resize_keyboard=True,
-)
+    
 @router.message(F.text == "📈 Мой прогресс")
 async def open_progress_menu(
     message: Message,
@@ -66,26 +70,20 @@ async def open_progress_menu(
     gif = get_random_gif()
 
     if gif:
-       await message.answer_document(gif)
+        await message.answer_animation(animation=gif)
 
     await message.answer(
-        "📈 <b>Мой прогресс</b>\n\n"
-        "Выберите действие:",
-        reply_markup=progress_menu,
+        "🏋️ <b>Ваш фитнес-прогресс</b>\n\n"
+        "Добро пожаловать в раздел отслеживания прогресса.\n\n"
+        "Здесь вы можете:\n"
+        "📏 Добавить новые замеры\n"
+        "📊 Посмотреть историю\n"
+        "📈 Посмотреть графики\n"
+        "🏆 Следить за своими достижениями\n\n"
+        "👇 Выберите действие:",
         parse_mode="HTML",
-    )
-@router.message(F.text == "📏 Добавить замеры")
-async def add_measurements(
-    message: Message,
-    state: FSMContext,
-):
-    await state.clear()
+        reply_markup=progress_menu,
 
-    await state.set_state(ProgressForm.biceps)
-
-    await message.answer(
-        "💪 Введите обхват бицепса в сантиметрах.\n\n"
-        "Например: 39"
     )
 
 @router.message(F.text == "📏 Добавить замеры")
@@ -99,52 +97,7 @@ async def add_measurements(
         "💪 Введите обхват бицепса в сантиметрах.\n\n"
         "Например: 39"
     )
-@router.message(F.text == "📊 Посмотреть прогресс")
-async def show_progress(
-    message: Message,
-    state: FSMContext,
-):
-    await state.clear()
 
-    cursor.execute(
-        """
-        SELECT date, biceps, chest, waist, weight
-        FROM progress
-        WHERE user_id = ?
-        ORDER BY id DESC
-        LIMIT 10
-        """,
-        (message.from_user.id,),
-    )
-
-    results = cursor.fetchall()
-
-    if not results:
-        await message.answer(
-            "📊 У вас пока нет сохранённых замеров.\n\n"
-            "Сначала нажмите «📏 Добавить замеры».",
-            reply_markup=progress_menu,
-        )
-        return
-
-    text = "📈 <b>Последние замеры</b>\n\n"
-
-    for i, row in enumerate(results, start=1):
-        date, biceps, chest, waist, weight = row
-
-        text += (
-            f"<b>{i}.</b> 📅 {date}\n"
-            f"💪 {biceps:g} см\n"
-            f"🫁 {chest:g} см\n"
-            f"📐 {waist:g} см\n"
-            f"⚖️ {weight:g} кг\n\n"
-        )
-
-    await message.answer(
-        text,
-        reply_markup=progress_menu,
-        parse_mode="HTML",
-    )
 
 @router.message(ProgressForm.biceps)
 async def save_biceps(
@@ -255,79 +208,283 @@ async def save_weight(
 
     data = await state.get_data()
 
-    today = datetime.now().strftime("%d.%m.%Y")
+    created_at = datetime.now().strftime("%d.%m.%Y %H:%M")
 
-    cursor.execute(
-        """
-        INSERT INTO progress(
-            user_id,
-            date,
-            biceps,
-            chest,
-            waist,
-            weight
+    try:
+        cursor.execute(
+            """
+            INSERT INTO progress (
+                user_id,
+                date,
+                biceps,
+                chest,
+                waist,
+                weight
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                message.from_user.id,
+                created_at,
+                data["biceps"],
+                data["chest"],
+                data["waist"],
+                weight,
+            ),
         )
-        VALUES (?, ?, ?, ?, ?, ?)
-        """,
-          (
-              message.from_user.id,
-              today,
-              data["biceps"],
-              data["chest"],
-              data["waist"],
-              weight,
-          ),
-    )
+
+    except Exception as error:
+        print("Ошибка сохранения замеров:", error)
+       
+        await message.answer(
+            "❌ Не удалось сохранить замеры.\n\n"
+            f"Ошибка: {error}"
+        )
+        return
+
 
     conn.commit()
 
+    coins_added = add_fitcoins(
+        user_id=message.from_user.id,
+        amount=10,
+        reason="Добавление замеров",
+    )
+
+    achievement = unlock_achievement(
+        message.from_user.id,
+        "FIRST_MEASURE",
+    )
+
+    if achievement:
+        title, reward = achievement
+
+        await message.answer(
+            "🏆 <b>Новое достижение!</b>\n\n"
+            f"{title}\n\n"
+            f"🪙 +{reward} FitCoins",
+            parse_mode="HTML",
+        )
+
+    cursor.execute(
+        """
+        SELECT biceps, chest, waist, weight
+        FROM progress
+        WHERE user_id = ?
+        ORDER BY id DESC
+        LIMIT 2
+        """,
+        (message.from_user.id,),
+    )
+    
+
+    history = cursor.fetchall()
+
+    analysis = ""
+
+    if len(history) >= 2:
+      current = history[0]
+      previous = history[1]
+
+      biceps_diff = current[0] - previous[0]
+      chest_diff = current[1] - previous[1]
+      waist_diff = current[2] - previous[2]
+      weight_diff = current[3] - previous[3]
+
+      analysis = "\n\n📈 <b>Изменения с прошлого замера</b>\n"
+
+      if biceps_diff > 0:
+          analysis += f"💪 Бицепс: +{biceps_diff:.1f} см\n"
+      elif biceps_diff < 0:
+          analysis += f"💪 Бицепс: {biceps_diff:.1f} см\n"
+      else:
+          analysis += "💪 Бицепс: без изменений\n"
+
+      if chest_diff > 0:
+          analysis += f"🫁 Грудь: +{chest_diff:.1f} см\n"
+      elif chest_diff < 0:
+          analysis += f"🫁 Грудь: {chest_diff:.1f} см\n"
+      else:
+          analysis += "🫁 Грудь: без изменений\n"
+
+      if waist_diff > 0:
+          analysis += f"📐 Талия: +{waist_diff:.1f} см\n"
+      elif waist_diff < 0:
+          analysis += f"📐 Талия: {waist_diff:.1f} см\n"
+      else:
+          analysis += "📐 Талия: без изменений\n"
+
+      if weight_diff > 0:
+          analysis += f"⚖️ Вес: +{weight_diff:.1f} кг\n"
+      elif weight_diff < 0:
+          analysis += f"⚖️ Вес: {weight_diff:.1f} кг\n"
+      else:
+          analysis += "⚖️ Вес: без изменений\n"
+
+
+    await state.clear()
+
+    coins_text = ""
+
+    if coins_added:
+     coins_text = "\n\n🪙 Получено: +10 FitCoins"
+
+    await message.answer(
+        "✅ <b>Замеры успешно сохранены!</b>\n\n"
+        f"🕒 Дата и время: {created_at}\n"
+        f"💪 Бицепс: {data['biceps']:g} см\n"
+        f"🫁 Грудь: {data['chest']:g} см\n"
+        f"📐 Талия: {data['waist']:g} см\n"
+        f"⚖️ Вес: {weight:g} кг"
+        f"{analysis}",
+        f"{coins_text}",
+        parse_mode="HTML",
+        reply_markup=progress_menu,
+    )
+
+    await message.answer(
+      "📸 Теперь отправьте фотографию формы «До».\n\n"
+      "Лучше всего:\n"
+      "• стоя прямо\n"
+      "• при хорошем освещении\n"
+      "• в полный рост или по пояс\n"
+      "• без верхней одежды\n\n"
+      "Эта фотография понадобится для сравнения прогресса."
+    )
+    await state.set_state(ProgressForm.before_photo)
+
+
+
+@router.message(ProgressForm.before_photo, F.photo)
+async def save_before_photo(
+    message: Message,
+    state: FSMContext,
+):
+    photo = message.photo[-1]
+
+    file = await message.bot.get_file(photo.file_id)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    filename = (
+    f"{message.from_user.id}_"
+    f"{timestamp}_before.jpg"
+)
+
+    destination = PHOTO_DIR / filename
+
+    await message.bot.download_file(
+        file.file_path,
+        destination=destination,
+    )
+
+    await message.answer(
+        "✅ Фото «ДО» успешно сохранено!\n\n"
+        "📷 Через месяц вы сможете загрузить фотографию «ПОСЛЕ», "
+        "и бот автоматически покажет изменения.",
+        reply_markup=progress_menu,
+    )
+
+    await state.clear()
 
 @router.message(F.text == "📊 Посмотреть прогресс")
 async def show_progress(
     message: Message,
     state: FSMContext,
 ):
+    
     await state.clear()
 
-    gif = get_random_gif()
-
-    if gif:
-        await message.answer_animation(gif)
 
     cursor.execute(
         """
-        SELECT
-            date,
-            biceps,
-            chest,
-            waist,
-            weight
+        SELECT date, biceps, chest, waist, weight
         FROM progress
         WHERE user_id = ?
         ORDER BY id DESC
-        LIMIT 1
+        LIMIT 10
         """,
         (message.from_user.id,),
     )
 
-    result = cursor.fetchone()
+    results = cursor.fetchall()
 
-    if result is None:
+    if not results:
         await message.answer(
-            "📊 У вас пока нет сохранённых замеров."
+            "📊 У вас пока нет сохранённых замеров.\n\n"
+            "Сначала нажмите «📏 Добавить замеры».",
+            reply_markup=progress_menu,
         )
         return
 
-    date, biceps, chest, waist, weight = result
+    text = "📈 <b>Последние замеры</b>\n\n"
+
+    for i, row in enumerate(results, start=1):
+        date, biceps, chest, waist, weight = row
+
+        text += (
+            f"<b>{i}.</b> 📅 {date}\n"
+            f"💪 {biceps:g} см\n"
+            f"🫁 {chest:g} см\n"
+            f"📐 {waist:g} см\n"
+            f"⚖️ {weight:g} кг\n\n"
+        )
 
     await message.answer(
-        "📈 Последние замеры\n\n"
-        f"📅 Дата: {date}\n"
-        f"💪 Бицепс: {biceps:g} см\n"
-        f"🫁 Грудь: {chest:g} см\n"
-        f"📐 Талия: {waist:g} см\n"
-        f"⚖️ Вес: {weight:g} кг",
+        text,
         reply_markup=progress_menu,
+        parse_mode="HTML",
+    )
+@router.message(ProgressForm.before_photo, F.photo)
+async def save_before_photo(
+    message: Message,
+    state: FSMContext,
+):
+    photo = message.photo[-1]
+
+    await message.answer(
+        "✅ Фото «ДО» успешно сохранено!\n\n"
+        "Через месяц вы сможете добавить фотографию «ПОСЛЕ» и бот автоматически покажет разницу.",
+        reply_markup=progress_menu,
+    )
+
+    await state.clear()
+
+@router.message(F.text == "📷 Мои фото прогресса")
+async def my_progress_photos(message: Message):
+
+    files = sorted(
+        PHOTO_DIR.glob(f"{message.from_user.id}_*.jpg"),
+        reverse=True,
+    )
+
+    if not files:
+        await message.answer(
+            "📷 У вас пока нет сохранённых фотографий."
+        )
+        return
+
+    await message.answer(
+        f"📸 Найдено фотографий: {len(files)}"
+    )
+
+    for photo in files:
+
+        await message.answer_photo(
+            FSInputFile(photo),
+            caption=photo.stem,
+        )
+
+@router.message(F.text == "⚖️ Сравнить ДО и ПОСЛЕ")
+async def compare_progress(
+    message: Message,
+):
+    await message.answer(
+        "🚧 Эта функция уже почти готова.\n\n"
+        "В следующем обновлении бот автоматически:\n\n"
+        "📷 покажет фото ДО и ПОСЛЕ;\n"
+        "📊 сравнит замеры;\n"
+        "🤖 сделает анализ изменений тела."
     )
 
 @router.message(F.text == "🏠 Главное меню")
